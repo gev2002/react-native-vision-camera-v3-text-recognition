@@ -1,6 +1,6 @@
 {
   "name": "react-native-vision-camera-v3-text-recognition",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The frame processor plugin for text recognition using  Google ML Kit library for react-native-vision-camera with high performance.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
