@@ -1,7 +1,6 @@
 package com.visioncamerav3textrecognition
 
 import android.media.Image
-import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -34,11 +33,10 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
         }
         val task: Task<Text> = recognizer.process(image)
         val result: Text? = Tasks.await(task)
-        val array = WritableNativeArray()
+        val map = WritableNativeMap()
         val resultText = result?.text
         if (result != null) {
           for (block in result.textBlocks) {
-            val map = WritableNativeMap()
             map.putString("resultText",resultText)
             val blockText = block.text
             map.putString("blockText",blockText)
@@ -111,10 +109,9 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
                 }
               }
             }
-            array.pushMap(map)
           }
         }
-        return array.toArrayList()
+        return map.toHashMap()
       } catch (e: Exception) {
        throw  Exception("Error processing text recognition: $e ")
       }

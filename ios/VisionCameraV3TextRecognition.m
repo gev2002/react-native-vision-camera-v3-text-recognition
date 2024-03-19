@@ -68,8 +68,12 @@
 
             }
             NSString *resultText = result.text;
-            data[@"resultText"] = resultText;
+
+            if (resultText) {
+            
+          
             for (MLKTextBlock *block in result.blocks) {
+                data[@"resultText"] = resultText;
                 NSString *blockText = block.text;
                 data[@"blockText"] = blockText;
                 CGRect blockFrame = block.frame;
@@ -98,6 +102,7 @@
                     data[@"size"] = @(elementFrame.size.height);
                 }
               }
+            }
             }
             dispatch_group_leave(dispatchGroup);
 
