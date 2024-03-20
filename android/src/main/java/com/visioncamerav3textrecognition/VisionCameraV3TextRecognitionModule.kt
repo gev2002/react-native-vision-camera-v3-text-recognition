@@ -1,6 +1,7 @@
 package com.visioncamerav3textrecognition
 
 import android.media.Image
+import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -16,13 +17,15 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.mrousavy.camera.frameprocessor.Frame
 import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
 import com.mrousavy.camera.frameprocessor.VisionCameraProxy
+import com.mrousavy.camera.types.Orientation
 
 
 class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Map<String, Any>?): FrameProcessorPlugin() {
   override fun callback(frame: Frame, arguments: Map<String, Any>?): Any {
-    val mediaImage: Image = frame.image
       try {
-        val image = InputImage.fromMediaImage(mediaImage, 0)
+        val mediaImage: Image = frame.image
+        val orientation : Orientation = frame.orientation
+        val image = InputImage.fromMediaImage(mediaImage, orientation.toDegrees())
         val recognizer : TextRecognizer = when (arguments?.get("language")) {
           "latin" -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
           "chinese" -> TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
@@ -33,10 +36,11 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
         }
         val task: Task<Text> = recognizer.process(image)
         val result: Text? = Tasks.await(task)
-        val map = WritableNativeMap()
+        val array = WritableNativeArray()
         val resultText = result?.text
         if (result != null) {
           for (block in result.textBlocks) {
+            val map = WritableNativeMap()
             map.putString("resultText",resultText)
             val blockText = block.text
             map.putString("blockText",blockText)
@@ -109,9 +113,10 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
                 }
               }
             }
+            array.pushMap(map)
           }
         }
-        return map.toHashMap()
+        return array.toArrayList()
       } catch (e: Exception) {
        throw  Exception("Error processing text recognition: $e ")
       }

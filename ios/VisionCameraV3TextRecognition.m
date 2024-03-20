@@ -55,7 +55,9 @@
 - (id _Nullable)callback:(Frame* _Nonnull)frame
            withArguments:(NSDictionary* _Nullable)arguments {
     CMSampleBufferRef buffer = frame.buffer;
+    UIImageOrientation orientation = frame.orientation;
     MLKVisionImage *image = [[MLKVisionImage alloc] initWithBuffer:buffer];
+    image.orientation = orientation;
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     dispatch_group_t dispatchGroup = dispatch_group_create();
     dispatch_group_enter(dispatchGroup);
@@ -68,12 +70,8 @@
 
             }
             NSString *resultText = result.text;
-
-            if (resultText) {
-            
-          
+            data[@"resultText"] = resultText;
             for (MLKTextBlock *block in result.blocks) {
-                data[@"resultText"] = resultText;
                 NSString *blockText = block.text;
                 data[@"blockText"] = blockText;
                 CGRect blockFrame = block.frame;
@@ -102,7 +100,6 @@
                     data[@"size"] = @(elementFrame.size.height);
                 }
               }
-            }
             }
             dispatch_group_leave(dispatchGroup);
 
