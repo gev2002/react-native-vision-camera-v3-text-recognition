@@ -18,7 +18,7 @@ yarn add react-native-vision-camera-v3-text-recognition
     Works for Both Cameras.
     Works Fast.
     Works With Android 🤖 and IOS.📱
-    Writen With Objective-C and Kotlin.
+    Writen With Kotlin and Objective-C.
 
 ## 💡 Usage
 
