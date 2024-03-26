@@ -66,8 +66,8 @@
                                    completion:^(MLKText *_Nullable result,
                                                 NSError *_Nullable error) {
             if (error || !result ) {
-                [NSException raise:@"Error processing text recognition" format:@"%@",error];
-
+                RCTResponseErrorBlock error;
+                return;
             }
             NSString *resultText = result.text;
             data[@"resultText"] = resultText;
