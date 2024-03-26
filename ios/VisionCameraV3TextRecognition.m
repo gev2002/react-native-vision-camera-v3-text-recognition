@@ -70,8 +70,8 @@
                 return;
             }
             NSString *resultText = result.text;
-            data[@"resultText"] = resultText;
             for (MLKTextBlock *block in result.blocks) {
+                data[@"resultText"] = resultText;
                 NSString *blockText = block.text;
                 data[@"blockText"] = blockText;
                 CGRect blockFrame = block.frame;
