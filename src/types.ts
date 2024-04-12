@@ -34,6 +34,6 @@ export type TextDataMap = {
 }
 
 export type CameraTypes = {
-  callback: Function;
+  callback: (data: TextDataMap) => void;
   options: TextRecognitionOptions;
 } & CameraProps;
