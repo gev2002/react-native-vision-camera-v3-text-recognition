@@ -2,6 +2,7 @@ import type {
   Frame,
   FrameProcessorPlugin,
   TextRecognitionOptions,
+  TextDataMap,
 } from './types';
 import { VisionCameraProxy } from 'react-native-vision-camera';
 import { Platform } from 'react-native';
@@ -15,7 +16,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-export function scanText(frame: Frame, options: TextRecognitionOptions): any {
+export function scanText(frame: Frame, options: TextRecognitionOptions): TextDataMap {
   'worklet';
   if (plugin == null) throw new Error(LINKING_ERROR);
   // @ts-ignore
