@@ -7,19 +7,19 @@ import { useRunInJS } from 'react-native-worklets-core';
 import { scanText } from './scanText';
 import type { CameraTypes, Frame, FrameProcessor } from './types';
 
-export { scanText } from './scanText';
+export { scanText, type TextData, type TextDataMap } from './scanText';
 
 export const Camera = forwardRef(function Camera(props: CameraTypes,ref:ForwardedRef<any>) {
   const { callback, device, options } = props;
   // @ts-ignore
-  const useWorklets = useRunInJS((data: object): void => {
+  const useWorklets = useRunInJS((data: TextDataMap): void => {
     callback(data);
   }, []);
   const frameProcessor: FrameProcessor = useFrameProcessor(
     (frame: Frame): void => {
       'worklet';
       // @ts-ignore
-      const data: object = scanText(frame, options);
+      const data = scanText(frame, options);
       // @ts-ignore
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useWorklets(data);
