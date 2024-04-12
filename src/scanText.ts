@@ -6,6 +6,30 @@ import type {
 import { VisionCameraProxy } from 'react-native-vision-camera';
 import { Platform } from 'react-native';
 
+export interface TextData {
+  blockFrameBottom: number
+  blockFrameLeft: number
+  blockFrameRight: number
+  blockFrameTop: number
+  blockText: string
+  elementFrameBottom: number
+  elementFrameLeft: number
+  elementFrameRight: number
+  elementFrameTop: number
+  elementText: string
+  lineFrameBottom: number
+  lineFrameLeft: number
+  lineFrameRight: number
+  lineFrameTop: number
+  lineText: string
+  resultText: string
+  size: number
+}
+
+export interface TextDataMap {
+  [key: number]: TextData
+}
+
 const plugin: FrameProcessorPlugin | undefined =
   VisionCameraProxy.initFrameProcessorPlugin('scanText');
 
@@ -15,7 +39,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-export function scanText(frame: Frame, options: TextRecognitionOptions): any {
+export function scanText(frame: Frame, options: TextRecognitionOptions): TextDataMap {
   'worklet';
   if (plugin == null) throw new Error(LINKING_ERROR);
   // @ts-ignore
