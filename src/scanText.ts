@@ -2,33 +2,10 @@ import type {
   Frame,
   FrameProcessorPlugin,
   TextRecognitionOptions,
+  TextDataMap,
 } from './types';
 import { VisionCameraProxy } from 'react-native-vision-camera';
 import { Platform } from 'react-native';
-
-export interface TextData {
-  blockFrameBottom: number
-  blockFrameLeft: number
-  blockFrameRight: number
-  blockFrameTop: number
-  blockText: string
-  elementFrameBottom: number
-  elementFrameLeft: number
-  elementFrameRight: number
-  elementFrameTop: number
-  elementText: string
-  lineFrameBottom: number
-  lineFrameLeft: number
-  lineFrameRight: number
-  lineFrameTop: number
-  lineText: string
-  resultText: string
-  size: number
-}
-
-export interface TextDataMap {
-  [key: number]: TextData
-}
 
 const plugin: FrameProcessorPlugin | undefined =
   VisionCameraProxy.initFrameProcessorPlugin('scanText');
