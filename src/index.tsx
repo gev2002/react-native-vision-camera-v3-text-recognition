@@ -5,7 +5,7 @@ import {
 } from 'react-native-vision-camera';
 import { useRunInJS } from 'react-native-worklets-core';
 import { scanText } from './scanText';
-import type { CameraTypes, Frame, FrameProcessor } from './types';
+import type { CameraTypes, Frame, FrameProcessor, TextDataMap } from './types';
 
 export { scanText } from './scanText';
 export type { TextData, TextDataMap } from './types';
