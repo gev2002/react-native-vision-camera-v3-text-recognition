@@ -7,6 +7,8 @@ import { useRunInJS } from 'react-native-worklets-core';
 import { scanText } from './scanText';
 import type { CameraTypes, Frame, FrameProcessor } from './types';
 
+export { scanText } from './scanText';
+
 export const Camera = forwardRef(function Camera(props: CameraTypes,ref:ForwardedRef<any>) {
   const { callback, device, options } = props;
   // @ts-ignore
