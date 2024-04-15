@@ -1,4 +1,4 @@
-import React, { forwardRef,type ForwardedRef } from 'react';
+import React, { forwardRef, type ForwardedRef } from 'react';
 import {
   Camera as VisionCamera,
   useFrameProcessor,
@@ -10,7 +10,10 @@ import type { CameraTypes, Frame, FrameProcessor, TextDataMap } from './types';
 export { scanText } from './scanText';
 export type { TextData, TextDataMap } from './types';
 
-export const Camera = forwardRef(function Camera(props: CameraTypes,ref:ForwardedRef<any>) {
+export const Camera = forwardRef(function Camera(
+  props: CameraTypes,
+  ref: ForwardedRef<any>
+) {
   const { callback, device, options } = props;
   // @ts-ignore
   const useWorklets = useRunInJS((data: TextDataMap): void => {
@@ -28,6 +31,8 @@ export const Camera = forwardRef(function Camera(props: CameraTypes,ref:Forwarde
     []
   );
   return (
-    !!device && <VisionCamera ref={ref} frameProcessor={frameProcessor} {...props} />
+    !!device && (
+      <VisionCamera ref={ref} frameProcessor={frameProcessor} {...props} />
+    )
   );
 });

@@ -10,28 +10,28 @@ export interface TextRecognitionOptions {
 }
 
 export type TextData = {
-  blockFrameBottom: number
-  blockFrameLeft: number
-  blockFrameRight: number
-  blockFrameTop: number
-  blockText: string
-  elementFrameBottom: number
-  elementFrameLeft: number
-  elementFrameRight: number
-  elementFrameTop: number
-  elementText: string
-  lineFrameBottom: number
-  lineFrameLeft: number
-  lineFrameRight: number
-  lineFrameTop: number
-  lineText: string
-  resultText: string
-  size: number
-}
+  blockFrameBottom: number;
+  blockFrameLeft: number;
+  blockFrameRight: number;
+  blockFrameTop: number;
+  blockText: string;
+  elementFrameBottom: number;
+  elementFrameLeft: number;
+  elementFrameRight: number;
+  elementFrameTop: number;
+  elementText: string;
+  lineFrameBottom: number;
+  lineFrameLeft: number;
+  lineFrameRight: number;
+  lineFrameTop: number;
+  lineText: string;
+  resultText: string;
+  size: number;
+};
 
 export type TextDataMap = {
-  [key: number]: TextData
-}
+  [key: number]: TextData;
+};
 
 export type CameraTypes = {
   callback: (data: TextDataMap) => void;
