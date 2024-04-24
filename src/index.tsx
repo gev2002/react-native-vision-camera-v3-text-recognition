@@ -5,7 +5,7 @@ import {
 } from 'react-native-vision-camera';
 import { useRunInJS } from 'react-native-worklets-core';
 import { scanText } from './scanText';
-import type { CameraTypes, Frame, FrameProcessor, TextDataMap } from './types';
+import type { CameraTypes, Frame, ReadonlyFrameProcessor, TextDataMap } from './types';
 
 export { scanText } from './scanText';
 export type { TextData, TextDataMap } from './types';
@@ -19,7 +19,7 @@ export const Camera = forwardRef(function Camera(
   const useWorklets = useRunInJS((data: TextDataMap): void => {
     callback(data);
   }, []);
-  const frameProcessor: FrameProcessor = useFrameProcessor(
+  const frameProcessor: ReadonlyFrameProcessor = useFrameProcessor(
     (frame: Frame): void => {
       'worklet';
       // @ts-ignore
