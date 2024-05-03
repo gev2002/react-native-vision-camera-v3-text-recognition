@@ -6,7 +6,7 @@
 #import <MLKitTextRecognitionCommon/MLKitTextRecognitionCommon.h>
 #import <VisionCamera/FrameProcessorPlugin.h>
 #import <VisionCamera/FrameProcessorPluginRegistry.h>
-#import <VisionCamera/VisionCameraProxy.h>
+#import <VisionCameraProxy.h>
 #import <VisionCamera/Frame.h>
 @import MLKitVision;
 @interface VisionCameraTextRecognitionV3Plugin : FrameProcessorPlugin
@@ -20,19 +20,17 @@
 - (instancetype)initWithProxy:(VisionCameraProxyHolder*)proxy
                    withOptions:(NSDictionary* _Nullable)options {
     self = [super initWithProxy:proxy withOptions:options];
-
-    if (options != nil && [options.allKeys containsObject:@"language"]) {
+    if (self) {
         NSString *language = options[@"language"];
 
+        NSLog(@" %@ 444 ",language);
         if ([language isEqualToString:@"latin"]) {
-            MLKTextRecognizerOptions *latinOptions = [[MLKTextRecognizerOptions alloc] init];
-            _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:latinOptions];
-        }
-        else if ([language isEqualToString:@"chinese"]) {
+            MLKTextRecognizerOptions *options = [[MLKTextRecognizerOptions alloc] init];
+            _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:options];
+        } else if ([language isEqualToString:@"chinese"]) {
             MLKChineseTextRecognizerOptions *chineseOptions = [[MLKChineseTextRecognizerOptions alloc] init];
             _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:chineseOptions];
-        }
-        else if ([language isEqualToString:@"devanagari"]) {
+        }else if ([language isEqualToString:@"devanagari"]) {
             MLKDevanagariTextRecognizerOptions *devanagariOptions = [[MLKDevanagariTextRecognizerOptions alloc] init];
             _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:devanagariOptions];
         }
@@ -43,12 +41,11 @@
         else if ([language isEqualToString:@"korean"]) {
             MLKKoreanTextRecognizerOptions *koreanOptions = [[MLKKoreanTextRecognizerOptions alloc] init];
             _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:koreanOptions];
-        }
-    } else {
-        MLKTextRecognizerOptions *defaultOptions = [[MLKTextRecognizerOptions alloc] init];
-        _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:defaultOptions];
-    }
+        }else {
+            MLKTextRecognizerOptions *defaultOptions = [[MLKTextRecognizerOptions alloc] init];
+            _textRecognizer = [MLKTextRecognizer textRecognizerWithOptions:defaultOptions];            }
 
+    }
     return self;
 }
 
@@ -58,7 +55,7 @@
     UIImageOrientation orientation = frame.orientation;
     MLKVisionImage *image = [[MLKVisionImage alloc] initWithBuffer:buffer];
     image.orientation = orientation;
-    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    NSMutableArray *data = [NSMutableArray array];
     dispatch_group_t dispatchGroup = dispatch_group_create();
     dispatch_group_enter(dispatchGroup);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -66,43 +63,44 @@
                                    completion:^(MLKText *_Nullable result,
                                                 NSError *_Nullable error) {
             if (error || !result ) {
-                RCTResponseErrorBlock error;
+                dispatch_group_leave(dispatchGroup);
                 return;
             }
-            NSString *resultText = result.text;
             for (MLKTextBlock *block in result.blocks) {
-                data[@"resultText"] = resultText;
+                NSMutableDictionary *objData = [[NSMutableDictionary alloc] init];
+                NSString *resultText = result.text;
+                objData[@"resultText"] = resultText;
                 NSString *blockText = block.text;
-                data[@"blockText"] = blockText;
+                objData[@"blockText"] = blockText;
                 CGRect blockFrame = block.frame;
-                data[@"blockFrameLeft"] = @(CGRectGetMinX(blockFrame));
-                data[@"blockFrameTop"] = @(CGRectGetMinY(blockFrame));
-                data[@"blockFrameRight"] = @(CGRectGetMaxX(blockFrame));
-                data[@"blockFrameBottom"] = @(CGRectGetMaxY(blockFrame));
-                data[@"size"] = @(blockFrame.size.height);
+                objData[@"blockFrameLeft"] = @(CGRectGetMinX(blockFrame));
+                objData[@"blockFrameTop"] = @(CGRectGetMinY(blockFrame));
+                objData[@"blockFrameRight"] = @(CGRectGetMaxX(blockFrame));
+                objData[@"blockFrameBottom"] = @(CGRectGetMaxY(blockFrame));
+                objData[@"size"] = @(blockFrame.size.height);
               for (MLKTextLine *line in block.lines) {
                 NSString *lineText = line.text;
-                  data[@"lineText"] = lineText;
+                  objData[@"lineText"] = lineText;
                   CGRect lineFrame = line.frame;
-                  data[@"lineFrameLeft"] = @(CGRectGetMinX(lineFrame));
-                  data[@"lineFrameTop"] = @(CGRectGetMinY(lineFrame));
-                  data[@"lineFrameRight"] = @(CGRectGetMaxX(lineFrame));
-                  data[@"lineFrameBottom"] = @(CGRectGetMaxY(lineFrame));
-                  data[@"size"] = @(lineFrame.size.height);
+                  objData[@"lineFrameLeft"] = @(CGRectGetMinX(lineFrame));
+                  objData[@"lineFrameTop"] = @(CGRectGetMinY(lineFrame));
+                  objData[@"lineFrameRight"] = @(CGRectGetMaxX(lineFrame));
+                  objData[@"lineFrameBottom"] = @(CGRectGetMaxY(lineFrame));
+                  objData[@"size"] = @(lineFrame.size.height);
                 for (MLKTextElement *element in line.elements) {
                   NSString *elementText = element.text;
                   CGRect elementFrame = element.frame;
-                    data[@"elementText"] = elementText;
-                    data[@"elementFrameLeft"] = @(CGRectGetMinX(elementFrame));
-                    data[@"elementFrameTop"] = @(CGRectGetMinY(elementFrame));
-                    data[@"elementFrameRight"] = @(CGRectGetMaxX(elementFrame));
-                    data[@"elementFrameBottom"] = @(CGRectGetMaxY(elementFrame));
-                    data[@"size"] = @(elementFrame.size.height);
+                    objData[@"elementText"] = elementText;
+                    objData[@"elementFrameLeft"] = @(CGRectGetMinX(elementFrame));
+                    objData[@"elementFrameTop"] = @(CGRectGetMinY(elementFrame));
+                    objData[@"elementFrameRight"] = @(CGRectGetMaxX(elementFrame));
+                    objData[@"elementFrameBottom"] = @(CGRectGetMaxY(elementFrame));
+                    objData[@"size"] = @(elementFrame.size.height);
                 }
               }
+                [data addObject:objData];
             }
             dispatch_group_leave(dispatchGroup);
-
         }];
 
     });

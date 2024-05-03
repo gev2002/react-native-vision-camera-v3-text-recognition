@@ -18,28 +18,33 @@ import com.mrousavy.camera.frameprocessor.Frame
 import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
 import com.mrousavy.camera.frameprocessor.VisionCameraProxy
 import com.mrousavy.camera.types.Orientation
+import java.util.ArrayList
 
 
 class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Map<String, Any>?): FrameProcessorPlugin() {
-  override fun callback(frame: Frame, arguments: Map<String, Any>?): Any {
+  private var recognizer: TextRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+  private var language = options?.get("language").toString()
+
+  init {
+    recognizer = when (language) {
+      "latin" -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+      "chinese" -> TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
+      "devanagari" -> TextRecognition.getClient(DevanagariTextRecognizerOptions.Builder().build())
+      "japanese" -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
+      "korean" -> TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
+      else -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    }
+  }
+  override fun callback(frame: Frame, arguments: Map<String, Any>?): ArrayList<Any> {
       try {
         val mediaImage: Image = frame.image
         val orientation : Orientation = frame.orientation
+        val array = WritableNativeArray()
         val image = InputImage.fromMediaImage(mediaImage, orientation.toDegrees())
-        val recognizer : TextRecognizer = when (arguments?.get("language")) {
-          "latin" -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-          "chinese" -> TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
-          "devanagari" -> TextRecognition.getClient(DevanagariTextRecognizerOptions.Builder().build())
-          "japanese" -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
-          "korean" -> TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
-          else -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        }
         val task: Task<Text> = recognizer.process(image)
         val result: Text? = Tasks.await(task)
-        val array = WritableNativeArray()
-        val resultText = result?.text
-        if (result != null) {
-          for (block in result.textBlocks) {
+          val resultText = result?.text
+          for (block in result?.textBlocks!!) {
             val map = WritableNativeMap()
             map.putString("resultText",resultText)
             val blockText = block.text
@@ -112,10 +117,10 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
                   map.putInt("elementFrameRight",elementFrameRight)
                 }
               }
+              array.pushMap(map)
+
             }
-            array.pushMap(map)
           }
-        }
         return array.toArrayList()
       } catch (e: Exception) {
        throw  Exception("Error processing text recognition: $e ")

@@ -1,9 +1,7 @@
 The frame processor plugin for text recognition using  Google ML Kit library for react-native-vision-camera with high performance.
-
 # 🚨 Required Modules
-
-react-native-vision-camera => 3.9.0 <br />
-react-native-worklets-core = 0.4.0
+react-native-vision-camera = 3.9.2 <br/>
+react-native-worklets-core = 0.5.0
 
 ## 💻 Installation
 
@@ -23,26 +21,72 @@ yarn add react-native-vision-camera-v3-text-recognition
 ## 💡 Usage
 
 ```js
+import React, { useState } from 'react'
+import { useCameraDevice } from 'react-native-vision-camera'
 import { Camera } from 'react-native-vision-camera-v3-text-recognition';
 
-const [text,setText] = useState(null)
+function App (){
+  const [data,setData] = useState(null)
+  const device = useCameraDevice('back');
+  console.log(data)
+  return(
+    <>
+      {!!device && (
+        <Camera
+          style={StyleSheet.absoluteFill}
+          device={device}
+          isActive
+          // optional
+          options={{
+            language:'latin'
+          }}
+          callback={(d) => setData(d)}
+        />
+      )}
+    </>
+  )
+}
 
-console.log(text)
+```
+### Also You Can Use Like This
 
-<Camera
-  options={{
-   language: "latin"
-    }}
-  style={StyleSheet.absoluteFill}
-  device={device}
-  callback={(data) => setText(data)}
-  {...props}
-/>
+```js
+import React from 'react';
+import { StyleSheet } from "react-native";
+import {
+  Camera,
+  useCameraDevice,
+  useFrameProcessor,
+} from "react-native-vision-camera";
+import { useTextRecognition } from "react-native-vision-camera-v3-text-recognition";
+
+function App() {
+  const device = useCameraDevice('back');
+  const options = { language : 'latin' }
+  const {scanText} = useTextRecognition(options)
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet'
+    const data = scanText(frame)
+	console.log(data, 'data')
+  }, [])
+  return (
+      <>
+      {!!device && (
+        <Camera
+          style={StyleSheet.absoluteFill}
+          device={device}
+          isActive
+          frameProcessor={frameProcessor}
+        />
+      )}
+      </>
+  );
+}
+export default App;
 ```
 
 
 ---
-
 ## ⚙️ Options
 
 |   Name   |  Type    |                 Values                 | Default |

@@ -1,10 +1,13 @@
 export type {
-  CameraProps,
   Frame,
-  FrameProcessorPlugin,
   FrameProcessor,
+  FrameProcessorPlugin,
+  FrameInternal,
+  CameraProps,
+  CameraDevice,
 } from 'react-native-vision-camera';
-import type { CameraProps } from 'react-native-vision-camera';
+export type { ForwardedRef } from 'react';
+import type { CameraProps, Frame } from 'react-native-vision-camera';
 export interface TextRecognitionOptions {
   language: 'latin' | 'chinese' | 'devanagari' | 'japanese' | 'korean';
 }
@@ -29,11 +32,15 @@ export type TextData = {
   size: number;
 };
 
-export type TextDataMap = {
-  [key: number]: TextData;
-};
+export interface Text {
+  [key: number | string]: TextData;
+}
 
 export type CameraTypes = {
-  callback: (data: TextDataMap) => void;
+  callback: (data: Text) => void;
   options: TextRecognitionOptions;
 } & CameraProps;
+
+export type TextRecognitionPlugin = {
+  scanText: (frame: Frame) => Text;
+};
