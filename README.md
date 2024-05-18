@@ -1,7 +1,7 @@
 The frame processor plugin for text recognition using  Google ML Kit library for react-native-vision-camera with high performance.
 # 🚨 Required Modules
-react-native-vision-camera = 3.9.2 <br/>
-react-native-worklets-core = 0.5.0
+react-native-vision-camera = 4.0.4 <br/>
+react-native-worklets-core = 1.3.3
 
 ## 💻 Installation
 

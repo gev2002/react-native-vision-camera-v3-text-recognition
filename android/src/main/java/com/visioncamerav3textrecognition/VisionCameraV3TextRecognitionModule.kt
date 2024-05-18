@@ -1,6 +1,7 @@
 package com.visioncamerav3textrecognition
 
 import android.media.Image
+import android.view.Surface
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.google.android.gms.tasks.Task
@@ -14,11 +15,20 @@ import com.google.mlkit.vision.text.devanagari.DevanagariTextRecognizerOptions
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import com.mrousavy.camera.frameprocessor.Frame
-import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
-import com.mrousavy.camera.frameprocessor.VisionCameraProxy
-import com.mrousavy.camera.types.Orientation
+import com.mrousavy.camera.frameprocessors.Frame
+import com.mrousavy.camera.frameprocessors.FrameProcessorPlugin
+import com.mrousavy.camera.frameprocessors.VisionCameraProxy
+import com.mrousavy.camera.core.types.Orientation
 import java.util.ArrayList
+
+fun Orientation?.toDegrees(): Int =
+  when (this) {
+    Orientation.PORTRAIT -> 0
+    Orientation.LANDSCAPE_LEFT -> 90
+    Orientation.PORTRAIT_UPSIDE_DOWN -> 180
+    Orientation.LANDSCAPE_RIGHT -> 270
+    else -> 0  // Default to PORTRAIT
+  }
 
 
 class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Map<String, Any>?): FrameProcessorPlugin() {
@@ -38,9 +48,10 @@ class VisionCameraV3TextRecognitionModule(proxy : VisionCameraProxy, options: Ma
   override fun callback(frame: Frame, arguments: Map<String, Any>?): ArrayList<Any> {
       try {
         val mediaImage: Image = frame.image
-        val orientation : Orientation = frame.orientation
         val array = WritableNativeArray()
-        val image = InputImage.fromMediaImage(mediaImage, orientation.toDegrees())
+        val orientation : Orientation = frame.orientation
+        val degrees = orientation.toDegrees()
+        val image = InputImage.fromMediaImage(mediaImage, degrees)
         val task: Task<Text> = recognizer.process(image)
         val result: Text? = Tasks.await(task)
           val resultText = result?.text

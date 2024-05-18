@@ -4,7 +4,7 @@ import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.bridge.NativeModule
-import com.mrousavy.camera.frameprocessor.FrameProcessorPluginRegistry
+import com.mrousavy.camera.frameprocessors.FrameProcessorPluginRegistry
 
 class VisionCameraV3TextRecognitionPackage : ReactPackage {
    companion object {
