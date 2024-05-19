@@ -7,7 +7,7 @@ import MLKitTextRecognitionCommon
 import VisionCamera
 import MLKitVision
 
-// Official instructions: https://cloud.google.com/vision/docs/ocr#ocr_requirements
+// Official instructions: https://developers.google.com/ml-kit/vision/text-recognition/v2/ios
 
 @objc(VisionCameraTextRecognition)
 public class VisionCameraTextRecognition: FrameProcessorPlugin {
