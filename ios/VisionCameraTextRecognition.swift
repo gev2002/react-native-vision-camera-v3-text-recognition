@@ -7,6 +7,8 @@ import MLKitTextRecognitionCommon
 import VisionCamera
 import MLKitVision
 
+// Official instructions: https://cloud.google.com/vision/docs/ocr#ocr_requirements
+
 @objc(VisionCameraTextRecognition)
 public class VisionCameraTextRecognition: FrameProcessorPlugin {
     
@@ -16,7 +18,6 @@ public class VisionCameraTextRecognition: FrameProcessorPlugin {
         super.init(proxy: proxy, options: options)
         
         if let language = options["language"] as? String {
-            print("\(language) 444")
             switch language {
             case "latin":
                 let options = TextRecognizerOptions()

@@ -30,7 +30,6 @@ export const Camera = forwardRef(function Camera(
   const frameProcessor: FrameProcessor = useFrameProcessor((frame: Frame) => {
     'worklet';
     const data: Text = scanText(frame);
-    console.log(data, 666);
     // @ts-ignore
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useWorklets(data);
