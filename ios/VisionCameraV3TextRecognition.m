@@ -6,7 +6,7 @@
 #import <MLKitTextRecognitionCommon/MLKitTextRecognitionCommon.h>
 #import <VisionCamera/FrameProcessorPlugin.h>
 #import <VisionCamera/FrameProcessorPluginRegistry.h>
-#import <VisionCameraProxy.h>
+#import <VisionCamera/VisionCameraProxyHolder.h>
 #import <VisionCamera/Frame.h>
 @import MLKitVision;
 @interface VisionCameraTextRecognitionV3Plugin : FrameProcessorPlugin
